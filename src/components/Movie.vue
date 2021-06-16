@@ -41,6 +41,7 @@ export default {
     vote: Number,
     overview: String,
     backPoster: String,
+    singleMovie: Object
   },
   data() {
     return {
