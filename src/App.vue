@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header @searchedMovie="updateSearch" />
-    <main class="d-flex flex-wrap">
+    <main class="d-flex flex-wrap" :class="searched == true ? 'pt-100' : ''">
       <video
         v-if="!searched"
         src="./assets/background-video.mp4"
@@ -13,12 +13,12 @@
         v-else
         v-for="(movie, index) in moviesAndSeries"
         :key="index"
-        :titolo="movie.title || movie.name"
-        :titoloOriginale="movie.original_title || movie.original_name"
-        :lingua="movie.original_language"
-        :voto="movie.vote_average"
+        :title="movie.title || movie.name"
+        :originalTitle="movie.original_title || movie.original_name"
+        :language="movie.original_language"
+        :vote="movie.vote_average"
         :poster="movie.poster_path"
-        :trama="movie.overview"
+        :overview="movie.overview"
         :backPoster="movie.backdrop_path"
       />
     </main>
@@ -41,8 +41,8 @@ export default {
     return {
       api_movie: "https://api.themoviedb.org/3/search/movie?",
       api_series: "https://api.themoviedb.org/3/search/tv?",
-      api_key: "api_key=2d86be3565490df0f2e313780db78001",
-      query: "",
+      api_key: "2d86be3565490df0f2e313780db78001",
+      lang: "it_IT",
       movies: [],
       series: [],
       searched: false,
@@ -50,20 +50,30 @@ export default {
   },
   methods: {
     updateSearch(string) {
-      this.query = string;
-      const moviesRequest = axios.get(
-        `${this.api_movie}${this.api_key}&query=${this.query}`
-      );
-      const seriesRequest = axios.get(
-        `${this.api_series}${this.api_key}&query=${this.query}`
-      );
+      if(string == '') {
+        return ''
+      }
+      
+      const moviesRequest = axios.get(this.api_movie, {
+        params: {
+          api_key: this.api_key,
+          language: this.lang,
+          query: string
+        }
+      });
+      const seriesRequest = axios.get(this.api_series, {
+        params: {
+          api_key: this.api_key,
+          language: this.lang,
+          query: string
+        }
+      });
       axios.all([moviesRequest, seriesRequest]).then(
         axios.spread((res1, res2) => {
           this.movies = res1.data.results;
           this.series = res2.data.results;
-          console.log(this.movies)
+          console.log(this.movies);
           console.log(this.series);
-
           this.searched = true;
         })
       );
@@ -80,7 +90,6 @@ export default {
 <style lang="scss">
 @import "./scss/general";
 main {
-  padding-top: 100px;
   height: 100vh;
   position: relative;
   z-index: 1;
@@ -90,5 +99,8 @@ main {
     height: 100%;
     object-fit: cover;
   }
+}
+.pt-100 {
+  padding-top: 100px;
 }
 </style>

@@ -1,138 +1,152 @@
 <template>
-  <section class="movie">
+  <div class="movie">
     <div class="poster d-flex">
-      <img :src="getImg" :alt="titolo" v-if="poster" />
-      <img v-else src="../assets/substitute.jpg" :alt="titolo" />
-      <div class="info text-center overflow">
+      <img :src="getImg" :alt="title" />
+      <div class="info text-center">
         <div class="info-container p-3">
-          <h5>
-            Titolo: 
-            <span>{{ titolo }}</span>
-          </h5>
-          <h5>
-            Titolo Originale: 
-            <span>{{ titoloOriginale }}</span>
-          </h5>
-          <span v-if="trama.length > 0">Trama:
-            <p>{{ trama }}</p>
-          </span>
-          <div class="lang d-flex align-items-center mb-3">
-            <span class="me-2">Lingua: </span>
-            <img v-if="lingua == 'it'" src="../assets/it.png" alt="language" />
-            <img
-              v-else-if="lingua == 'en'"
-              src="../assets/en.png"
-              alt="language"/>
-            <span class="grey" v-else>{{ lingua }}</span>
-          </div>
-          <div class="vote d-flex align-items-center">
-            <span
-              >Voto:
+          <ul>
+            <li><span>Title:</span> {{ title }}</li>
+            <li><span>Original Title:</span> {{ originalTitle }}</li>
+            <li v-if="overview.length > 0">
+              <span>Overview:</span> {{ overview }}
+            </li>
+            <li class="d-flex">
+              <span>Language:</span>
+              <img :src="flag" :alt="language" />
+            </li>
+            <li>
+              <span>Vote:</span>
               <i
                 class="me-1"
                 v-for="i in 5"
                 :key="i"
                 :class="i <= roundVote ? 'fas fa-star' : 'far fa-star'"
               ></i>
-            </span>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
 export default {
   name: "Movie",
   props: {
-    titolo: String,
-    titoloOriginale: String,
-    lingua: String,
+    title: String,
+    originalTitle: String,
+    language: String,
     poster: String,
-    voto: Number,
-    trama: String,
+    vote: Number,
+    overview: String,
     backPoster: String,
   },
   data() {
     return {
       img: "https://image.tmdb.org/t/p/w342",
+      flag: ""
     };
+  },
+  methods: {
+    getFlag() {
+      switch (this.language) {
+        case "it":
+          this.flag = require("../assets/it.png");
+          break;
+        case "en":
+          this.flag = require("../assets/en.png");
+          break;
+        case "fr":
+          this.flag = require("../assets/fr.jpg");
+          break;
+        case "ja":
+          this.flag = require("../assets/ja.png");
+          break;
+        case "es":
+          this.flag = require("../assets/es.png");
+          break;
+        case "pt":
+          this.flag = require("../assets/pt.jpg");
+          break;
+      }
+    },
   },
   computed: {
     getImg() {
-      return `${this.img}${this.poster}`;
+      let choosePoster = this.poster;
+      if (this.poster != null) {
+        return `${this.img}${this.poster}`;
+      } else if (this.poster == null) {
+        if (this.backPoster != null) {
+          return `${this.img}${this.backPoster}`;
+        } else {
+          return require("../assets/substitute.jpg");
+        }
+      }
+      return choosePoster;
     },
     roundVote() {
-      return Math.round(this.voto / 2);
-    }
+      return Math.round(this.vote / 2);
+    },
+  },
+  created() {
+    this.getFlag()
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../scss/general";
+
 .movie {
   width: calc(100% / 4);
   height: auto;
-}
-.poster {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  img {
+  .poster {
+    position: relative;
     width: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-}
+    height: 100%;
+    &:hover .info {
+      display: block;
+    }
+    img {
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .info {
+      display: none;
+      position: absolute;
+      overflow-y: auto;
+      width: 100%;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.8);
 
-.info {
-  display: none;
-  position: absolute;
-  width: 100%;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
+      .info-container {
+        width: 100%;
+        text-align: left;
+        ul {
+          list-style: none;
 
-  p {
-    font-size: 0.63em;
-    color: $primaryText;
-  }
-}
-.info-container {
-  width: 100%;
-  text-align: left;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.poster:hover .info {
-  display: block;
-}
-.lang {
-  width: 100%;
-  text-align: left;
-}
-.lang img {
-  width: 40px;
-}
-
-h5 {
-  font-size: 1em;
-  color: $secondaryText;
-  span {
-    color: $primaryText;
-  }
-}
-.grey {
-  color: $primaryText;
-}
-
-.vote {
-  i {
-    color: hsla(61, 96%, 51%, 0.781);
+          & > li {
+            padding: 5px 0;
+          }
+        }
+        img {
+          width: 30px;
+        }
+        span {
+          margin-right: 5px;
+        }
+        span:not(.lang) {
+          color: $secondaryText;
+          font-weight: bold;
+        }
+        i {
+          color: hsla(61, 96%, 51%, 0.781);
+        }
+      }
+    }
   }
 }
 </style>
