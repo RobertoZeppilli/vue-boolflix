@@ -4,11 +4,10 @@
       <video src="../assets/background-video.mp4" muted loop autoplay></video>
     </div>
     <div v-else>
-      <div v-if="movies.length > 0 || series.length > 0">
+      <div v-if="filterMovie.length > 0 || filterSerie.length > 0">
         <section
           class="movies"
           v-if="filterMovie.length > 0"
-          :class="filterMovie.length == 0 ? 'ciao' : ''"
         >
           <h3 v-if="movies.length > 0">Film</h3>
           <div class="d-flex flex-wrap">
