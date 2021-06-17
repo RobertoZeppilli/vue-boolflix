@@ -9,7 +9,7 @@
       <div class="selects" v-if="inSearching">
         <select
           v-model="choosedMovieGenre"
-          @change="$emit('updateMovieGenre', choosedMovieGenre)"
+          @change="$emit('updateMovieGenre', choosedMovieGenre.toString())"
         >
           <option value="">Filtra Film</option>
           <option
@@ -22,7 +22,7 @@
         </select>
         <select
           v-model="choosedSerieGenre"
-          @change="$emit('updateSerieGenre', choosedSerieGenre)"
+          @change="$emit('updateSerieGenre', choosedSerieGenre.toString())"
         >
           <option value="">Filtra Serie</option>
           <option

@@ -39,8 +39,8 @@ export default {
       series: [],
       movieGenres: [],
       serieGenres: [],
-      newMovieGenre: 0,
-      newSerieGenre: 0,
+      newMovieGenre: "",
+      newSerieGenre: "",
       searched: false,
     };
   },

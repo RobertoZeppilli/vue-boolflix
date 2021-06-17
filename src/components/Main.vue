@@ -5,7 +5,11 @@
     </div>
     <div v-else>
       <div v-if="movies.length > 0 || series.length > 0">
-        <section class="movies" v-if="filterMovie.length > 0" :class="filterMovie.length == 0 ? 'ciao' : ''">
+        <section
+          class="movies"
+          v-if="filterMovie.length > 0"
+          :class="filterMovie.length == 0 ? 'ciao' : ''"
+        >
           <h3 v-if="movies.length > 0">Film</h3>
           <div class="d-flex flex-wrap">
             <Movie
@@ -58,14 +62,12 @@ export default {
     movies: Array,
     series: Array,
     inSearching: Boolean,
-    newGenreForMovie: Number,
-    newGenreForSerie: Number,
+    newGenreForMovie: String,
+    newGenreForSerie: String,
   },
   computed: {
     filterMovie() {
-      let ciao = this.newGenreForMovie;
-      if (ciao == "") {
-        ciao = 0
+      if (this.newGenreForMovie == "") {
         return this.movies;
       } else {
         const newArray = this.movies.filter((el) => {
@@ -83,8 +85,8 @@ export default {
         });
         return newArray;
       }
-    },
-  }
+    }
+  },
 };
 </script>
 
@@ -118,16 +120,7 @@ main {
     }
   }
 }
-.ciao::before {
-  content: "Il filtro non ha prodotto risultati";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: inherit;
-  color: #fff;
-  height: 100%;
-  width: 100%;
-}
+
 .pt-100 {
   padding-top: 100px;
 }
