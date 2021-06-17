@@ -5,11 +5,11 @@
     </div>
     <div v-else>
       <div v-if="movies.length > 0 || series.length > 0">
-        <section class="movies">
+        <section class="movies" v-if="filterMovie.length > 0" :class="filterMovie.length == 0 ? 'ciao' : ''">
           <h3 v-if="movies.length > 0">Film</h3>
           <div class="d-flex flex-wrap">
             <Movie
-              v-for="(movie, index) in movies"
+              v-for="(movie, index) in filterMovie"
               :key="index"
               :title="movie.title"
               :originalTitle="movie.original_title"
@@ -22,11 +22,11 @@
             />
           </div>
         </section>
-        <section class="series">
+        <section class="series" v-if="filterSerie.length > 0">
           <h3 v-if="series.length > 0">Serie</h3>
           <div class="d-flex flex-wrap">
             <Movie
-              v-for="(serie, index) in series"
+              v-for="(serie, index) in filterSerie"
               :key="index"
               :title="serie.name"
               :originalTitle="serie.original_name"
@@ -58,7 +58,33 @@ export default {
     movies: Array,
     series: Array,
     inSearching: Boolean,
+    newGenreForMovie: Number,
+    newGenreForSerie: Number,
   },
+  computed: {
+    filterMovie() {
+      let ciao = this.newGenreForMovie;
+      if (ciao == "") {
+        ciao = 0
+        return this.movies;
+      } else {
+        const newArray = this.movies.filter((el) => {
+          return el.genre_ids == this.newGenreForMovie;
+        });
+        return newArray;
+      }
+    },
+    filterSerie() {
+      if (this.newGenreForSerie == "") {
+        return this.series;
+      } else {
+        const newArray = this.series.filter((el) => {
+          return el.genre_ids == this.newGenreForSerie;
+        });
+        return newArray;
+      }
+    },
+  }
 };
 </script>
 
@@ -92,6 +118,16 @@ main {
     }
   }
 }
+.ciao::before {
+  content: "Il filtro non ha prodotto risultati";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: inherit;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+}
 .pt-100 {
   padding-top: 100px;
 }
@@ -115,7 +151,6 @@ main {
       right: 0;
       bottom: 0;
       height: 100%;
-      
     }
     &::before {
       background-color: $primaryBg;
@@ -124,7 +159,8 @@ main {
     &::after {
       width: 0.125em;
       background-color: $secondaryText;
-      animation: typeAnimation 2s steps(36) 0.5s forwards, cursorEffect 500ms steps(36) infinite;
+      animation: typeAnimation 2s steps(36) 0.5s forwards,
+        cursorEffect 500ms steps(36) infinite;
     }
   }
 }
@@ -146,5 +182,4 @@ main {
     background-color: transparent;
   }
 }
-
 </style>

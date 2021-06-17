@@ -5,7 +5,35 @@
         <img src="../assets/logo-boolflix.png" alt="logo" />
       </a>
     </div>
-    <div class="input-bar">
+    <div class="search d-flex align-items-center">
+      <div class="selects" v-if="inSearching">
+        <select
+          v-model="choosedMovieGenre"
+          @change="$emit('updateMovieGenre', choosedMovieGenre)"
+        >
+          <option value="">Filtra Film</option>
+          <option
+            v-for="(movieName, index) in movieNames"
+            :key="index"
+            :value="movieName.id"
+          >
+            {{ movieName.name }}
+          </option>
+        </select>
+        <select
+          v-model="choosedSerieGenre"
+          @change="$emit('updateSerieGenre', choosedSerieGenre)"
+        >
+          <option value="">Filtra Serie</option>
+          <option
+            v-for="(serieName, index) in serieNames"
+            :key="index"
+            :value="serieName.id"
+          >
+            {{ serieName.name }}
+          </option>
+        </select>
+      </div>
       <input
         class="p-1 px-2"
         @keyup.enter="$emit('searchedMovie', movieChoosed)"
@@ -27,13 +55,20 @@ export default {
   data() {
     return {
       movieChoosed: "",
+      choosedMovieGenre: "",
+      choosedSerieGenre: "",
     };
   },
+  props: {
+    movieNames: Array,
+    serieNames: Array,
+    inSearching: Boolean
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '../scss/variables';
+@import "../scss/variables";
 
 header {
   height: 100px;
@@ -45,14 +80,14 @@ header {
   img {
     height: 80px;
   }
-  .input-bar {
+  .search {
     input {
       border: none;
       border-radius: 5px;
       background-color: transparent;
       border: 1px solid $secondaryText;
       outline: none;
-      transition: box-shadow .5s ease-in-out;
+      transition: box-shadow 0.5s ease-in-out;
       width: 300px;
       color: $primaryText;
       &:hover {
@@ -66,11 +101,23 @@ header {
       font-size: 25px;
       color: $secondaryText;
       cursor: pointer;
-      transition: transform .5s ease-in-out;
+      transition: transform 0.5s ease-in-out;
       &:hover {
         transform: scale(1.2);
       }
     }
+  }
+}
+select {
+  padding: 0.28rem;
+  margin-right: 20px;
+  background: transparent;
+  border: 1px solid $secondaryText;
+  border-radius: 5px;
+  color: $secondaryText;
+  transition: box-shadow 0.5s ease-in-out;
+  &:hover {
+    box-shadow: 3px 3px 3px red;
   }
 }
 </style>

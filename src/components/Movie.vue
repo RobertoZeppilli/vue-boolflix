@@ -31,6 +31,7 @@
 </template>
 
 <script>
+// import axios from "axios";
 export default {
   name: "Movie",
   props: {
@@ -46,7 +47,7 @@ export default {
   data() {
     return {
       img: "https://image.tmdb.org/t/p/w342",
-      flag: "",
+      flag: ""
     };
   },
   methods: {
