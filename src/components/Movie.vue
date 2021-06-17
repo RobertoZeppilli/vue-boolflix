@@ -5,17 +5,17 @@
       <div class="info text-center">
         <div class="info-container p-3">
           <ul>
-            <li><span>Title:</span> {{ title }}</li>
-            <li><span>Original Title:</span> {{ originalTitle }}</li>
+            <li><span>Titolo:</span> {{ title }}</li>
+            <li><span>Titolo Originale:</span> {{ originalTitle }}</li>
             <li v-if="overview.length > 0">
-              <span>Overview:</span> {{ overview }}
+              <span>Trama:</span> {{ overview }}
             </li>
             <li class="d-flex">
-              <span>Language:</span>
+              <span>Lingua:</span>
               <img :src="flag" :alt="language" />
             </li>
             <li>
-              <span>Vote:</span>
+              <span>Voto:</span>
               <i
                 class="me-1"
                 v-for="i in 5"
@@ -41,15 +41,16 @@ export default {
     vote: Number,
     overview: String,
     backPoster: String,
-    singleMovie: Object
+    singleMovie: Object,
   },
   data() {
     return {
       img: "https://image.tmdb.org/t/p/w342",
-      flag: ""
+      flag: "",
     };
   },
   methods: {
+    // funzione per ottenere le bandiere collegate alla lingua del film/serie
     getFlag() {
       switch (this.language) {
         case "it":
@@ -74,6 +75,7 @@ export default {
     },
   },
   computed: {
+    // prendere l'immagine del poster, in caso di null prendo il backPoster, in caso fosse null anche quello richiedo un'immagine salvata negli assets
     getImg() {
       let choosePoster = this.poster;
       if (this.poster != null) {
@@ -88,11 +90,13 @@ export default {
       return choosePoster;
     },
     roundVote() {
-      return Math.round(this.vote / 2);
+      // arrotondo il numero del voto dividendolo per due
+      return Math.ceil(this.vote / 2);
     },
   },
   created() {
-    this.getFlag()
+    // richiamo la funzione per le bandiere alla creazione del componente movie
+    this.getFlag();
   },
 };
 </script>
@@ -101,12 +105,17 @@ export default {
 @import "../scss/general";
 
 .movie {
-  width: calc(100% / 4);
+  width: calc(100% / 4 - 2rem);
   height: auto;
+  margin: 1rem;
+  box-shadow: 2px 2px 5px $secondaryText;
+  border-radius: 5px;
+  overflow: hidden;
   .poster {
     position: relative;
-    width: 100%;
     height: 100%;
+    object-fit: cover;
+      object-position: center;
     &:hover .info {
       display: block;
     }
@@ -114,6 +123,7 @@ export default {
       width: 100%;
       object-fit: cover;
       object-position: center;
+      
     }
     .info {
       display: none;
@@ -138,8 +148,6 @@ export default {
         }
         span {
           margin-right: 5px;
-        }
-        span:not(.lang) {
           color: $secondaryText;
           font-weight: bold;
         }

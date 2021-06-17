@@ -43,17 +43,23 @@ header {
   top: 0;
   z-index: 2;
   img {
-    height: 60px;
+    height: 80px;
   }
   .input-bar {
     input {
       border: none;
       border-radius: 5px;
+      background-color: transparent;
+      border: 1px solid $secondaryText;
       outline: none;
       transition: box-shadow .5s ease-in-out;
       width: 300px;
+      color: $primaryText;
       &:hover {
         box-shadow: 3px 3px 3px red;
+      }
+      &::placeholder {
+        color: $primaryText;
       }
     }
     i {

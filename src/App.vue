@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header @searchedMovie="updateSearch" />
-    <Main :items="moviesAndSeries" :inSearching="searched" />
+    <Main :series="series" :movies="movies" :inSearching="searched" />
   </div>
 </template>
 
@@ -19,8 +19,7 @@ export default {
   },
   data() {
     return {
-      api_movie: "https://api.themoviedb.org/3/search/movie?",
-      api_series: "https://api.themoviedb.org/3/search/tv?",
+      api_url: "https://api.themoviedb.org/3/",
       api_key: "2d86be3565490df0f2e313780db78001",
       lang: "it-IT",
       movies: [],
@@ -29,6 +28,8 @@ export default {
     };
   },
   methods: {
+
+    // Assegno la stringa dell'input alla query della chiamata axios ed eseguo la chiamata
     updateSearch(string) {
       if (string == "") {
         return "";
@@ -40,25 +41,24 @@ export default {
           language: this.lang,
         },
       };
-      const moviesRequest = axios.get(this.api_movie, params);
-      const seriesRequest = axios.get(this.api_series, params);
+      this.getCalls(params)
+    },
+    getCalls(newParams) {
+
+      // funzione per creare le chiamate axios salvate in costanti 
+      const moviesRequest = axios.get(`${this.api_url}search/movie?`, newParams);
+      const seriesRequest = axios.get(`${this.api_url}search/tv?`, newParams);
 
       axios.all([moviesRequest, seriesRequest]).then(
         axios.spread((res1, res2) => {
           this.movies = res1.data.results;
           this.series = res2.data.results;
-          console.log(this.movies);
-          console.log(this.series);
+      
           this.searched = true;
         })
       );
-    },
-  },
-  computed: {
-    moviesAndSeries() {
-      return [...this.movies, ...this.series];
-    },
-  },
+    }
+  }
 };
 </script>
 
